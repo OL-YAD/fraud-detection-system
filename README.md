@@ -117,8 +117,6 @@ Navigate to `http://127.0.0.1:8050/` after starting the application.
 ### Endpoints
 
 #### Fraud Detection Endpoint
-```http
-```
 
 **Request Body:**
 ```json
@@ -167,8 +165,6 @@ Navigate to `http://127.0.0.1:8050/` after starting the application.
 
 
 #### Credit Card Fraud Detection Endpoint
-```http
-```
 
 **Request Body:**
 ```json
