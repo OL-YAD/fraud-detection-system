@@ -8,6 +8,8 @@ from typing import Tuple, Dict
 import plotly.express as px
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
+import socket
+import struct
 
 def load_datasets() -> Tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     """
@@ -116,45 +118,14 @@ def get_data_info(df: pd.DataFrame) -> None:
     print(f"Data types:\n{df.dtypes.value_counts().to_dict()}")
 
 
-# def ip_to_int(ip_str: str) -> int:
-#     """
-#     Convert IP address string to integer
-    
-#     Args:
-#         ip_str: IP address string
-    
-#     Returns:
-#         Integer representation of IP address
-#     """
-#     try:
-#         return int(ipaddress.ip_address(ip_str))
-#     except:
-#         return None
 
-
-# def ip_to_int(ip_str: str) -> int:
-#     """
-#     Convert IP address string to integer.
-    
-#     Args:
-#         ip_str: IP address string.
-    
-#     Returns:
-#         Integer representation of IP address, or None if conversion fails.
-#     """
-#     try:
-#         return int(ipaddress.ip_address(ip_str))
-#     except ValueError:  # Catches invalid IP address formats
-#         return None
-
-import socket
-import struct
 def ip_to_int(ip):
     """Convert an IP address to its integer representation."""
     try:
         return struct.unpack("!I", socket.inet_aton(ip))[0]
     except socket.error:
-        return None 
+        return None  # Handle invalid IPs gracefully
+
 
 
 def create_time_features(df: pd.DataFrame) -> pd.DataFrame:
@@ -228,6 +199,7 @@ def encode_categorical_features(df: pd.DataFrame) -> pd.DataFrame:
     
     categorical_columns = df_copy.select_dtypes(include=['object']).columns
     exclude_columns = ['ip_address', 'user_id', 'device_id']
+    
     categorical_columns = [col for col in categorical_columns if col not in exclude_columns]
     
     # Apply one-hot encoding
@@ -250,6 +222,7 @@ def normalize_features(df: pd.DataFrame) -> pd.DataFrame:
     
     numeric_columns = df_copy.select_dtypes(include=[np.number]).columns
     exclude_columns = ['class', 'Class', 'user_id', 'device_id']
+
     numeric_columns = [col for col in numeric_columns if col not in exclude_columns]
     
     df_copy[numeric_columns] = scaler.fit_transform(df_copy[numeric_columns])
